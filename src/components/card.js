@@ -1,5 +1,4 @@
-import { openImgPopup, closeModal, addPopup } from '../components/modal'
-import { cardTemplate, cards } from '../index.js'
+import { cardTemplate } from '../index.js'
 
 function createCard(data, removeCb, like, openImg) {
 	const cardElement = cardTemplate
@@ -30,33 +29,8 @@ function deleteCard(item) {
 	item.remove()
 }
 
-function pageOn(cardsBlock) {
-	const cardNode = cardsBlock.map((item) =>
-		createCard(item, deleteCard, handleLike, openImgPopup)
-	)
-	cards.append(...cardNode)
-}
-
 function handleLike(item) {
 	item.classList.toggle('card__like-button_is-active')
 }
 
-function handleAddCard(evt) {
-	evt.preventDefault()
-	const addPopUpName = document.querySelector('.popup__input_type_card-name')
-
-	const addPopUpLink = document.querySelector('.popup__input_type_url')
-
-	const newData = { name: addPopUpName.value, link: addPopUpLink.value }
-
-	const newCard = createCard(newData, deleteCard, handleLike, openImgPopup)
-
-	cards.prepend(newCard)
-
-	closeModal(addPopup)
-
-	addPopUpName.value = ''
-	addPopUpLink.value = ''
-}
-
-export { createCard, deleteCard, pageOn, handleAddCard, handleLike }
+export { createCard, deleteCard, handleLike }
