@@ -1,10 +1,3 @@
-import {
-	nameInput,
-	editPopUpName,
-	jobInput,
-	editPopUpDescription,
-} from '../index.js'
-
 const handleEscKeyUp = (e) => {
 	if (e.key === 'Escape') {
 		const popup = document.querySelector('.popup_is-opened')
