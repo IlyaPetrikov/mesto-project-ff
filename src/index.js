@@ -36,8 +36,8 @@ const addPopUpLink = document.querySelector('.popup__input_type_url')
 const addPopupForm = document.querySelector('.popup__form_add')
 const editPopupForm = document.querySelector('.popup__form_edit')
 const popupButton = document.querySelector('.popup__button')
-const nameInput = document.querySelector('.profile__title')
-const jobInput = document.querySelector('.profile__description')
+const profileTitle = document.querySelector('.profile__title')
+const descriptionText = document.querySelector('.profile__description')
 
 const avatarProfileButton = document.querySelector('.profile__image')
 const avatarImage = document.querySelector('.profile__image')
@@ -45,9 +45,12 @@ const avatarPopup = document.querySelector('.popup_type_avatar')
 const avatarSubmitButton = document.querySelector('.popup__form_avatar')
 const avatarInput = document.querySelector('.popup__input_avatar')
 
-function updateAvatar(data) {
-	nameInput.textContent = data.name
-	jobInput.textContent = data.about
+const cardImagePopup = document.querySelector('.popup__image')
+const popupImageTitle = document.querySelector('.popup__caption')
+
+function newProfileData(data) {
+	profileTitle.textContent = data.name
+	descriptionText.textContent = data.about
 	avatarImage.style.backgroundImage = `url(${data.avatar})`
 }
 
@@ -107,9 +110,6 @@ function handleAddCard(evt) {
 }
 
 function openImgPopup(ImageLink, ImageName) {
-	const cardImagePopup = document.querySelector('.popup__image')
-	const popupImageTitle = document.querySelector('.popup__caption')
-
 	cardImagePopup.src = ImageLink
 	cardImagePopup.alt = ImageName
 	popupImageTitle.textContent = ImageName
@@ -117,18 +117,19 @@ function openImgPopup(ImageLink, ImageName) {
 	openModal(imgPopup)
 }
 
-function typeEditPopupInputs(evt) {
+function submitChangeProfileData(evt) {
 	evt.preventDefault()
 
 	loadingRender(true, popupButton)
 
-	nameInput.textContent = editPopUpName.value
-	jobInput.textContent = editPopUpDescription.value
-
 	saveNewProfile(editPopUpName.value, editPopUpDescription.value)
 		.then((data) => {
+			profileTitle.textContent = editPopUpName.value
+			descriptionText.textContent = editPopUpDescription.value
+
 			editPopUpName.textContent = data.name
 			editPopUpDescription.textContent = data.about
+
 			closeModal(editPopup)
 		})
 		.catch((err) => {
@@ -139,12 +140,12 @@ function typeEditPopupInputs(evt) {
 		})
 }
 
-editFormElement.addEventListener('submit', typeEditPopupInputs)
+editFormElement.addEventListener('submit', submitChangeProfileData)
 
 editButton.addEventListener('click', function () {
 	openModal(editPopup)
-	editPopUpName.value = nameInput.textContent
-	editPopUpDescription.value = jobInput.textContent
+	editPopUpName.value = profileTitle.textContent
+	editPopUpDescription.value = descriptionText.textContent
 
 	resetInput(editPopupForm, config)
 })
@@ -169,17 +170,17 @@ enableValidation(config)
 
 Promise.all([getProfileData(), getCards()])
 	.then(([userData, cardData]) => {
-		updateAvatar(userData)
+		newProfileData(userData)
 
 		cardData.forEach((card) => {
-			const RenderData = createCard(
+			const renderData = createCard(
 				card,
 				deleteCard,
 				handleLike,
 				openImgPopup,
 				userData._id
 			)
-			cards.append(RenderData)
+			cards.append(renderData)
 		})
 	})
 	.catch((err) => {
